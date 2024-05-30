@@ -1,23 +1,34 @@
+import React from 'react';
 
-export const AverageRating = ({ ratings }) => {
-    // Calculate the average rating rounded up
-    const averageRate = Math.ceil(
-      ratings.reduce((sum, rating) => sum + rating.rate, 0) / ratings.length
-    );
-  
-    // Create an array of 5 elements representing the stars
-    const stars = Array.from({ length: 5 }, (_, index) => index + 1);
-  
+function AverageRating({ ratings }) {
+  const calculateAverage = () => {
+    if (ratings.length === 0) return 0;
+    const sum = ratings.reduce((acc, rating) => acc + rating.rate, 0);
+    return Math.ceil(sum / ratings.length);
+  };
+
+  const averageRate = calculateAverage();
+  const renderStars = () => {
+    const filledStars = '★'.repeat(averageRate);
+    const emptyStars = '☆'.repeat(5 - averageRate);
     return (
-      <div className="ratings__average">
-        {/* Map over the stars array and render a filled or empty star based on the averageRate */}
-        <div className="stars">
-          {stars.map((star) => (
-            <span key={star}>
-              {star <= averageRate ? "★" : "☆"}
-            </span>
-          ))}
-        </div>
-      </div>
+      <>
+        {filledStars.split('').map((star, index) => (
+          <span key={index}>{star}</span>
+        ))}
+        {emptyStars.split('').map((star, index) => (
+          <span key={index + averageRate}>{star}</span>
+        ))}
+      </>
     );
   };
+
+  return (
+    <div className="ratings__average">
+      <h3>Average Rating</h3>
+      <div>{renderStars()}</div>
+    </div>
+  );
+}
+
+export default AverageRating;

@@ -1,36 +1,50 @@
-// RatingsList component
-import React from "react";
-import { AverageRating } from "./AverageRating";
-import { Rating } from "./Rating";
-// RatingsList component
-const RatingsList = ({ ratings }) => {
-    // State to store the updated ratings
-    const [updatedRatings, setUpdatedRatings] = React.useState(ratings);
-  
-    // Function to handle rate change
-    const handleRateChange = (index, newRate) => {
-      const newRatings = [...updatedRatings];
-      newRatings[index].rate = newRate;
-      setUpdatedRatings(newRatings);
-    };
-  
-    return (
-      <div className="ratings">
-        {/* Render the AverageRating component passing the updated ratings as a prop */}
-        <AverageRating ratings={updatedRatings} />
-  
-        {/* Map over the ratings array and render a Rating component for each rating */}
-        {updatedRatings.map((rating, index) => (
-          <Rating
-            key={index}
-            name={rating.name}
-            rate={rating.rate}
-            content={rating.content}
-            onRateChange={(newRate) => handleRateChange(index, newRate)}
-          />
+import React, { useState } from 'react';
+import Rating from './Rating.jsx';
+ import AverageRating from './AverageRating.jsx';
+
+function RatingsList() {
+  const [name, setName] = useState('');
+  const [content, setContent] = useState('');
+  const [rate, setRate] = useState(0);
+  const [ratings, setRatings] = useState([]);
+
+  function handleRate() {
+    setRatings([...ratings, { name, content, rate }]);
+    setName('');
+    setContent('');
+    setRate(0);
+  }
+
+  return (
+    <div className="ratings">
+      <h1>Rating List</h1>
+      <div>
+        <label>Name:</label>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      </div>
+      <div>
+        <label>Content:</label>
+        <input type="text" value={content} onChange={(e) => setContent(e.target.value)} />
+      </div>
+      <div>
+        <label>Rating:</label>
+        <input
+          type="number"
+          value={rate}
+          min={1}
+          max={5}
+          onChange={(e) => setRate(parseInt(e.target.value))}
+        />
+      </div>
+      <button onClick={handleRate}>Submit Rating</button>
+      <AverageRating ratings={ratings} />
+      <div>
+        {ratings.map((rating, index) => (
+          <Rating key={index} name={rating.name} content={rating.content} rate={rating.rate} />
         ))}
       </div>
-    );
-  };
-  
-  export default RatingsList;
+    </div>
+  );
+}
+
+export default RatingsList;

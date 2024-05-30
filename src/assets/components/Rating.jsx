@@ -1,35 +1,28 @@
 import React from 'react';
 
-// Rating component
-export const Rating = ({ name, rate, content, onRateChange }) => {
-    // Create an array of 5 elements representing the stars
-    const stars = Array.from({ length: 5 }, (_, index) => index + 1);
-  
-    // Function to handle star click
-    const handleStarClick = (newRate) => {
-      onRateChange(newRate);
-    };
-  
+function Rating({ name, content, rate }) {
+  const renderStars = () => {
+    const filledStars = '★'.repeat(rate);
+    const emptyStars = '☆'.repeat(5 - rate);
     return (
-      <div className="ratings__item">
-        {/* Display the name in h3 tags */}
-        <h3>{name}</h3>
-  
-        {/* Map over the stars array and render a filled or empty star based on the rate */}
-        <div className="stars">
-          {stars.map((star) => (
-            <span
-              key={star}
-              className={`star ${star <= rate ? 'filled' : 'empty'}`}
-              onClick={() => handleStarClick(star)}
-            >
-              {star <= rate ? "★" : "☆"}
-            </span>
-          ))}
-        </div>
-  
-        {/* Display the content in p tags */}
-        <p>{content}</p>
-      </div>
+      <>
+        {filledStars.split('').map((star, index) => (
+          <span key={index}>{star}</span>
+        ))}
+        {emptyStars.split('').map((star, index) => (
+          <span key={index + rate}>{star}</span>
+        ))}
+      </>
     );
   };
+
+  return (
+    <div className="ratings__item">
+      <h3>{name}</h3>
+      <div>{renderStars()}</div>
+      <p>{content}</p>
+    </div>
+  );
+}
+
+export default Rating;
